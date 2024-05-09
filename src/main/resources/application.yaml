@@ -1,0 +1,11 @@
+spring:
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+  main:
+    banner-mode: off
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+  port: 8080

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mriya log</title>
+    <!-- Підключення Bootstrap -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #343a40; /* Темний фон */
+            color: #ffffff; /* Білий колір тексту */
+        }
+        #textContainer {
+            max-height: 500px; /* Максимальна висота контейнера */
+            overflow-y: auto; /* Включення вертикального скроллбару при необхідності */
+            overflow-x: auto; /* Включення горизонтального скроллбару при необхідності */
+            white-space: pre; /* Збереження форматування тексту */
+            width: 100%; /* Ширина контейнера, весь доступний простір */
+<!--            max-height: 80%;-->
+            padding: 0; /* Видалення внутрішнього відступу */
+            margin: 0; /* Видалення зовнішнього відступу */
+            font-family: monospace; /* Використання моноширинного шрифту */
+        }
+
+
+
+    </style>
+</head>
+<body>
+<div class="container-fluid mt-5">
+    <!--    <h1 class="text-center mb-4">Text Viewer</h1>-->
+    <div id="textContainer" class="mb-4"></div>
+</div>
+
+<!-- Підключення JavaScript -->
+<script>
+function updateText() {
+    fetch('/api/logs/log/mariya')
+        .then(response => response.text())
+        .then(data => {
+            var textContainer = document.getElementById('textContainer');
+
+            // Перевірка чи скролбар в нижньому положенні
+            var isScrolledToBottom = textContainer.scrollHeight - textContainer.clientHeight <= textContainer.scrollTop + 1;
+
+            // Оновлення тексту в контейнері
+            textContainer.innerText = data;
+
+            // Якщо скролбар був у нижньому положенні, прокрутити вниз знову
+            if (isScrolledToBottom) {
+                textContainer.scrollTop = textContainer.scrollHeight;
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+updateText();
+
+// Виклик функції оновлення тексту кожні 5 секунд
+setInterval(updateText, 5000);
+
+</script>
+</body>
+</html>
