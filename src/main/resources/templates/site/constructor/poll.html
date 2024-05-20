@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конструктор віджетів</title>
+    <link rel="stylesheet" th:href="@{/css/poll.css}">
+    <link rel="stylesheet" href="https://cdn.notiflix.com/notiflix-3.2.5.min.css" />
+    <script src="https://cdn.notiflix.com/notiflix-3.2.5.min.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="constructor">
+            <h1>Конструктор опитувань</h1>
+            <div>
+                <label for="questionText">Текст опитування:</label>
+                <textarea id="questionText" rows="8" placeholder="Введіть текст опитування тут..."></textarea>
+            </div>
+            <div>
+                <label for="optionText">Текст кнопки:</label>
+                <input type="text" id="optionText" placeholder="Введіть текст кнопки тут...">
+                <button id="addOptionBtn">Додати кнопку</button>
+            </div>
+        </div>
+        <div class="preview">
+            <h2>Попередній перегляд</h2>
+            <div id="previewContainer">
+                <p id="previewQuestion"></p>
+                <div id="previewOptionsContainer">
+                    <!-- Попередній перегляд кнопок буде тут -->
+                </div>
+            </div>
+            <button id="finishBtn">Завершити</button>
+	</div>
+    </div>
+
+    <script th:src="@{/js/poll.js}"></script>
+</body>
+</html>
+

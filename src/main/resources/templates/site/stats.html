@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post Messages Chart</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+
+        h1, label {
+            color: #ffffff;
+        }
+
+        select {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+<h1>Post Messages Chart</h1>
+<label for="intervalSelect">Select Time Interval: </label>
+<select id="intervalSelect">
+  <option value="5">5 Minutes</option>
+  <option value="10">10 Minutes</option>
+  <option value="15" selected>15 Minutes</option>
+  <option value="30">30 Minutes</option>
+  <option value="60">60 Minutes</option>
+</select>
+<canvas id="postChart" width="auto" height="100%"></canvas>
+<script>
+    async function fetchPostData(interval) {
+        const response = await fetch('/api/posts?interval='+interval);
+        const posts = await response.json();
+
+        const sortedPosts = posts.sort((a, b) => new Date(a.creationTime) - new Date(b.creationTime));
+
+        const labels = [];
+        const data = [];
+
+        sortedPosts.forEach(post => {
+            labels.push(post.creationTime);
+            data.push(post.countMessages);
+        });
+
+        return { labels, data };
+    }
+
+    async function updateChart(interval) {
+        const chartData = await fetchPostData(interval);
+
+        const ctx = document.getElementById('postChart').getContext('2d');
+        if (window.postChart && typeof window.postChart.destroy === 'function') {
+            window.postChart.destroy();
+        }
+        window.postChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: chartData.labels,
+                datasets: [{
+                    label: 'Number of Messages',
+                    data: chartData.data,
+                    backgroundColor: 'rgba(50, 50, 50, 0.8)',
+                    borderColor: 'rgba(255, 255, 255, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            color: '#ffffff'
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.2)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#ffffff'
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.2)'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    document.getElementById('intervalSelect').addEventListener('change', (event) => {
+        updateChart(event.target.value);
+    });
+
+    // Ініціалізація з дефолтним значенням (наприклад, 5 хвилин)
+    document.getElementById("intervalSelect").value = "15";
+    updateChart(15);
+</script>
+</body>
+</html>

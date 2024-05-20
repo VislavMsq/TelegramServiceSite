@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>МріяБотХаб</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+<body>
+<header>
+    <nav class="navbar">
+        <ul class="navbar-links">
+            <li class="navbar-item">
+                <a href="#home">Головна</a>
+            </li>
+            <li class="navbar-item">
+                <a>Послуги</a>
+                <ul class="dropdown">
+                    <li><a href="#service1">бот-адмін</a></li>
+                    <li><a href="/logs/log/mariya">логи</a></li>
+                    <li><a href="#service2">бот-ідписник</a></li>
+                    <li><a href="#logs">логи</a></li>
+                    <li><a href="/statistics/stats">пости</a></li>
+                    <li><a href="/constructor/poll">опитування</a></li>
+                    <li><a href="#posts/stats">статистика</a></li>
+                </ul>
+            </li>
+            <li class="navbar-item">
+                <a>Про нас</a>
+                <ul class="dropdown">
+                    <li><a href="#team">Команда</a></li>
+                    <li><a href="#mission">Місія</a></li>
+                    <li><a href="#history">Історія</a></li>
+                </ul>
+            </li>
+            <li class="navbar-item">
+                <a href="#contact">Контакти</a>
+                <ul class="dropdown">
+                    <li><a href="#email">Email</a></li>
+                    <li><a href="#phone">Телефон</a></li>
+                    <li><a href="#address">Адреса</a></li>
+                </ul>
+            </li>
+        </ul>
+        <div class="navbar-login">
+            <a href="#login" class="login-button">Вхід</a>
+        </div>
+        <div class="navbar-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <section id="home">
+        <h1>Ласкаво просимо до МріяБотХаб</h1>
+        <p>Тут ваші мрії та боти зустрічаються!</p>
+        <p>Мріяти не забороняється, а мріяботи — тим більше!</p>
+    </section>
+</main>
+</body>
+</html>
