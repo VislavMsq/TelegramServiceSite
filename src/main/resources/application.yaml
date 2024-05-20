@@ -2,8 +2,21 @@ spring:
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
+
+  datasource:
+    password: 208634
+    url: jdbc:postgresql://localhost:5432/interactio_db
+    username: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    defer-datasource-initialization: false
+    open-in-view: false
+    show-sql: true
+
   main:
     banner-mode: off
+
 server:
   error:
     include-message: always

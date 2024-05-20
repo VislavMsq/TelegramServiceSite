@@ -15,7 +15,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 //@Immutable
-@Table(name = "users")
+//@Table(name = "users")
 public class User {
 
     @Id
