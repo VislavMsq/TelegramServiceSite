@@ -23,7 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterBefore(otpAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .formLogin()
-                .loginPage("/login.html")
+                .loginPage("/login")
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/home", true)
 //                .permitAll()

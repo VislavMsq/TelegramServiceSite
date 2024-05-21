@@ -29,4 +29,10 @@ public class RedirectController {
     public String redirectToHome1() {
         return "redirect:/home";
     }
+
+    @GetMapping("/login")
+    public String redirectToLogin() {
+        return "login";
+    }
+
 }
