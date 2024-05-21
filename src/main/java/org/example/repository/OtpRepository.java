@@ -8,9 +8,9 @@ import java.util.UUID;
 
 @Repository
 public interface OtpRepository extends JpaRepository<Otp, UUID> {
-    boolean existsByOtp(String otp);
+    boolean existsByCode(Long code);
 
-    Otp findFirstByOtp(String otp);
+    Otp findFirstByCode(Long code);
 
-    void removeByUserId(String telegramUserId);
+    void removeByCode(Long code);
 }

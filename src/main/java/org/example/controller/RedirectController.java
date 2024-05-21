@@ -7,22 +7,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class RedirectController {
     @GetMapping("logs/log/mariya")
     public String redirectToMariya() {
-        return "site/mariyalog";
+        return "site/secured/mariyalog";
     }
 
     @GetMapping("statistics/stats")
     public String redirectToStats() {
-        return "site/stats";
+        return "site/secured/stats";
     }
 
     @GetMapping("constructor/poll")
     public String redirectToPoll() {
-        return "site/constructor/poll";
+        return "site/secured/constructor/poll";
     }
 
     @GetMapping("home")
     public String redirectToHome() {
-        return "site/home";
+        return "site/all/home";
     }
 
     @GetMapping
@@ -32,7 +32,12 @@ public class RedirectController {
 
     @GetMapping("/login")
     public String redirectToLogin() {
-        return "login";
+        return "site/all/login";
+    }
+
+    @GetMapping("/register")
+    public String redirectToRegister() {
+        return "site/all/register";
     }
 
 }
