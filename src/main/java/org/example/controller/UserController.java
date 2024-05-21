@@ -23,7 +23,6 @@ public class UserController {
         if (!otpRepository.existsByCode(webUserDto.getTelegramId())) {
             throw new InvalidOtpException(ErrorMessage.INVALID_OTP);
         } else if (webUserService.existByEmail(webUserDto.getEmail())) {
-            otpRepository.deleteByCode(webUserDto.getTelegramId());
             throw new InvalidOtpException(ErrorMessage.EMAIL_ALREADY_EXISTS);
         } else {
             webUserService.save(webUserDto);
