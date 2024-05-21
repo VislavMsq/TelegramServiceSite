@@ -2,6 +2,7 @@ package org.example.service;
 
 
 import org.example.entity.subscriber.WebUser;
+import org.example.entity.subscriber.dto.WebUserDto;
 import org.example.exception.NotFoundException;
 
 import java.util.Optional;
@@ -16,4 +17,5 @@ public interface WebUserService {
 
     WebUser findByEmail(String email);
 
+    void save(WebUserDto webUserDto);
 }

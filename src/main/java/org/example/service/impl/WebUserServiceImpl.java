@@ -3,8 +3,13 @@ package org.example.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.example.entity.enums.ErrorMessage;
 import org.example.entity.subscriber.WebUser;
+import org.example.entity.subscriber.dto.WebUserDto;
+import org.example.entity.temp.Otp;
+import org.example.repository.OtpRepository;
 import org.example.repository.WebUserRepository;
 import org.example.service.WebUserService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.example.exception.NotFoundException;
 
@@ -12,6 +17,8 @@ import org.example.exception.NotFoundException;
 @RequiredArgsConstructor
 public class WebUserServiceImpl implements WebUserService {
     private final WebUserRepository userRepository;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final OtpRepository otpRepository;
 
 
     @Override
@@ -38,5 +45,18 @@ public class WebUserServiceImpl implements WebUserService {
             throw new NotFoundException(ErrorMessage.DATA_NOT_FOUND);
         }
         return userRepository.findFirstByEmail(email);
+    }
+
+    @Override
+    public void save(WebUserDto webUserDto) {
+        Otp otp = otpRepository.findFirstByCode(webUserDto.getTelegramId());
+
+        WebUser user = new WebUser();
+
+        user.setEmail(webUserDto.getEmail());
+        user.setPassword(passwordEncoder.encode(webUserDto.getPassword()));
+        user.setTelegramId(otp.getUserId());
+        user.setUsername(otp.getName());
+        userRepository.save(user);
     }
 }
