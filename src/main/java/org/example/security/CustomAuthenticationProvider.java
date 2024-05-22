@@ -39,13 +39,13 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     private boolean checker(String username, String password) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String hashedPassword = passwordEncoder.encode(password);
         try {
-            if (userService.findByPasswordAndEmail(hashedPassword, username) != null) {
-                return true;
+            if (userService.existByEmail(username)) {
+                return passwordEncoder.matches(password, userService.findByEmail(username).getPassword());
             }
         } catch (Throwable ignore) {
         }
         return false;
     }
 }
+// $2a$10$IbiGuULi9ne7GNeAyCQym.k.ZmUEDHRmUg3Dq0CgztIHYVmWaMvk2

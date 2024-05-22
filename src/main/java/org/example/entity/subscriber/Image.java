@@ -5,61 +5,49 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "posts")
-public class Post {
+@Table(name = "images")
+public class Image {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(name = "telegram_id")
-    private Integer telegramId;
+    @Column(name = "image_id")
+    private UUID imageId;
 
     @ManyToOne(
             fetch = FetchType.LAZY,
             cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}
     )
-    @JoinColumn(name = "channel_id")
-    private Channel channel;
-
-    @Column(name = "post_time")
-    private LocalDateTime postTime;
-
-    @OneToMany(
-            mappedBy = "post",
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
-            fetch = FetchType.LAZY
-    )
-    private Set<Message> messages;
+    @JoinColumn(name = "notification_id")
+    private Notification notificationId;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Post post = (Post) o;
-        return Objects.equals(id, post.id) && Objects.equals(telegramId, post.telegramId);
+        Image image = (Image) o;
+        return Objects.equals(id, image.id) && Objects.equals(imageId, image.imageId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, telegramId);
+        return Objects.hash(id, imageId);
     }
 
     @Override
     public String toString() {
-        return "Post{" +
+        return "Image{" +
                 "id=" + id +
-                ", telegramId=" + telegramId +
+                ", imageId=" + imageId +
                 '}';
     }
 }

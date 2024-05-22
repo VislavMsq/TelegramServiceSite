@@ -4,7 +4,7 @@ spring:
     suffix: .html
 
   datasource:
-    password: postgres
+    password: 208634
     url: jdbc:postgresql://localhost:5432/interactio_db
     username: postgres
     driver-class-name: org.postgresql.Driver
@@ -16,9 +16,6 @@ spring:
 
   main:
     banner-mode: off
-
-  liquibase:
-    change-log: classpath:db/changelog/changelog-master.xml
 
 server:
   error:

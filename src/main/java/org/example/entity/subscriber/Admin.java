@@ -5,49 +5,35 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "posts")
-public class Post {
+@Table(name = "admins")
+public class Admin {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(name = "telegram_id")
-    private Integer telegramId;
-
     @ManyToOne(
-            fetch = FetchType.LAZY,
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}
-    )
+            fetch = FetchType.LAZY)
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
-    @Column(name = "post_time")
-    private LocalDateTime postTime;
-
-    @OneToMany(
-            mappedBy = "post",
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
-            fetch = FetchType.LAZY
-    )
-    private Set<Message> messages;
+    @Column(name = "telegram_id")
+    private Long telegramId;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Post post = (Post) o;
-        return Objects.equals(id, post.id) && Objects.equals(telegramId, post.telegramId);
+        Admin admin = (Admin) o;
+        return Objects.equals(id, admin.id) && Objects.equals(telegramId, admin.telegramId);
     }
 
     @Override
@@ -57,9 +43,9 @@ public class Post {
 
     @Override
     public String toString() {
-        return "Post{" +
+        return "Admin{" +
                 "id=" + id +
-                ", telegramId=" + telegramId +
+                ", adminId=" + telegramId +
                 '}';
     }
 }

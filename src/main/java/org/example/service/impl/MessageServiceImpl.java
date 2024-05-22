@@ -31,7 +31,7 @@ public class MessageServiceImpl implements MessageService {
     private Long proceedMessages(Post post, int interval) {
 
         List<LocalDateTime> localDateTimes = post.getMessages().stream()
-                .map(Message::getDate)
+                .map(Message::getMessageTime)
                 .collect(Collectors.toList());
         localDateTimes.add(post.getPostTime());
         return avgDates(localDateTimes,interval);

@@ -3,27 +3,23 @@ package org.example.entity.subscriber;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.entity.enums.NotiType;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "posts")
-public class Post {
+@Table(name = "notifications")
+public class Notification {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-
-    @Column(name = "telegram_id")
-    private Integer telegramId;
 
     @ManyToOne(
             fetch = FetchType.LAZY,
@@ -32,34 +28,35 @@ public class Post {
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
-    @Column(name = "post_time")
-    private LocalDateTime postTime;
+    @Column(name = "text")
+    private String text;
 
-    @OneToMany(
-            mappedBy = "post",
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
-            fetch = FetchType.LAZY
-    )
-    private Set<Message> messages;
+    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
+    private NotiType notiType;
+
+    @Column(name = "code")
+    private Long code;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Post post = (Post) o;
-        return Objects.equals(id, post.id) && Objects.equals(telegramId, post.telegramId);
+        Notification that = (Notification) o;
+        return Objects.equals(id, that.id) && Objects.equals(text, that.text);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, telegramId);
+        return Objects.hash(id, text);
     }
 
     @Override
     public String toString() {
-        return "Post{" +
+        return "Notification{" +
                 "id=" + id +
-                ", telegramId=" + telegramId +
+                "code=" + code +
+                ", text='" + text + '\'' +
                 '}';
     }
 }

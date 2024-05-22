@@ -33,13 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         }
     });
-	document.getElementById('finishBtn').addEventListener('click', () => {
+    document.getElementById('finishBtn').addEventListener('click', () => {
         const buttonNames = Array.from(document.querySelectorAll('.preview-button')).map(button => button.textContent);
         const surveyText = document.getElementById('questionText').value.trim();
 
-        if (buttonNames.len() < 1) {
-
-        }
+        // if (buttonNames.len() < 1) {
+        //
+        // }
 
         // Виконати HTTP-запит тут з параметрами buttonNames та surveyText
         console.log('Назви кнопок:', buttonNames);
@@ -56,14 +56,51 @@ document.addEventListener('DOMContentLoaded', () => {
                 text: surveyText
             })
         })
-        .then(response => response.json())
-        .then(data => {
-            // Обробка відповіді з сервера
-            console.log('Отримано відповідь від сервера:', data);
-        })
-        .catch(error => {
-            console.error('Помилка:', error);
-        });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                if (data) {
+                    const jsonData = JSON.parse(data);
+                    console.log('Отримано відповідь від сервера:', jsonData);
+                } else {
+                    console.log('No data received from server');
+                }
+            })
+            .catch(error => {
+                console.error('Помилка:', error);
+            });
     });
 });
-
+/*
+fetch('/api/constructor/poll', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        buttons: buttonNames,
+        text: surveyText
+    })
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return response.text();
+})
+.then(data => {
+    if (data) {
+        const jsonData = JSON.parse(data);
+        console.log('Отримано відповідь від сервера:', jsonData);
+    } else {
+        console.log('No data received from server');
+    }
+})
+.catch(error => {
+    console.error('Помилка:', error);
+});
+ */

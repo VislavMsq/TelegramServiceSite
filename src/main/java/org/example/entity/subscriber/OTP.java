@@ -1,6 +1,7 @@
-package org.example.entity.temp;
+package org.example.entity.subscriber;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -8,19 +9,22 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table
 @Getter
 @Setter
-public class Otp {
+@NoArgsConstructor
+@Table(name = "otp")
+public class OTP {
+
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(name = "user_id")
-    private Long userId;
-
     @Column(name = "otp")
     private Long code;
+
+    @Column(name = "user_id")
+    private Long userId;
 
     @Column(name = "user_name")
     private String name;
@@ -29,22 +33,22 @@ public class Otp {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Otp otp = (Otp) o;
-        return Objects.equals(id, otp.id) && Objects.equals(userId, otp.userId) && Objects.equals(code, otp.code) && Objects.equals(name, otp.name);
+        OTP otp1 = (OTP) o;
+        return Objects.equals(id, otp1.id) && Objects.equals(code, otp1.code) && Objects.equals(userId, otp1.userId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, code, name);
+        return Objects.hash(id, code, userId);
     }
 
     @Override
     public String toString() {
-        return "Otp{" +
+        return "OTP{" +
                 "id=" + id +
+                ", otp=" + code +
+                ", name='" + name +
                 ", userId=" + userId +
-                ", code=" + code +
-                ", name='" + name + '\'' +
                 '}';
     }
 }

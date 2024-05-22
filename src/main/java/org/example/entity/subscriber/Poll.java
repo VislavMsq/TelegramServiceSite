@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -13,13 +14,22 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "users")
-public class User {
+@Table(name = "polls")
+public class Poll {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "code")
+    private Long code;
+
+    @Column(name = "text")
+    private String text;
 
     @ManyToOne(
             fetch = FetchType.LAZY,
@@ -28,39 +38,32 @@ public class User {
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
-    @Column(name = "telegram_id")
-    private Long telegramId;
-
-    @Column(name = "last_message_time")
-    private LocalDateTime lastMessageTime;
-
-    @Column(name = "leave_time")
-    private LocalDateTime leaveTime;
-
-    @Column(name = "join_time")
-    private LocalDateTime joinTime;
+    @OneToMany(
+            mappedBy = "poll",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            fetch = FetchType.LAZY
+    )
+    private List<Button> buttons;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(telegramId, user.telegramId) && Objects.equals(lastMessageTime, user.lastMessageTime) && Objects.equals(leaveTime, user.leaveTime) && Objects.equals(joinTime, user.joinTime);
+        Poll poll = (Poll) o;
+        return Objects.equals(id, poll.id) && Objects.equals(createdAt, poll.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, telegramId, lastMessageTime, leaveTime, joinTime);
+        return Objects.hash(id, createdAt);
     }
 
     @Override
     public String toString() {
-        return "User{" +
+        return "Polls{" +
                 "id=" + id +
-                ", telegramId=" + telegramId +
-                ", lastMessageTime=" + lastMessageTime +
-                ", leaveTime=" + leaveTime +
-                ", joinTime=" + joinTime +
+                "code=" + code +
+                ", createdAt=" + createdAt +
                 '}';
     }
 }

@@ -6,5 +6,5 @@ import lombok.Data;
 public class WebUserDto {
     private String email;
     private String password;
-    private Long telegramId;
+    private Long otpTelegram;
 }

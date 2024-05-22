@@ -2,9 +2,9 @@ package org.example.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.example.entity.enums.ErrorMessage;
+import org.example.entity.subscriber.OTP;
 import org.example.entity.subscriber.WebUser;
 import org.example.entity.subscriber.dto.WebUserDto;
-import org.example.entity.temp.Otp;
 import org.example.repository.OtpRepository;
 import org.example.repository.WebUserRepository;
 import org.example.service.WebUserService;
@@ -49,7 +49,7 @@ public class WebUserServiceImpl implements WebUserService {
 
     @Override
     public void save(WebUserDto webUserDto) {
-        Otp otp = otpRepository.findFirstByCode(webUserDto.getTelegramId());
+        OTP otp = otpRepository.findFirstByCode(webUserDto.getOtpTelegram());
 
         WebUser user = new WebUser();
 
