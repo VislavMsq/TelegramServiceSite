@@ -34,5 +34,6 @@ public class PollServiceImpl implements PollService {
             buttons.add(buttonRaw);
         }
         pollRaw.setButtons(buttons);
+        pollRawRepository.save(pollRaw);
     }
 }

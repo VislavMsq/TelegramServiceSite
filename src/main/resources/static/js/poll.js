@@ -69,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     console.log('No data received from server');
                 }
+                window.location.href = '/';
             })
             .catch(error => {
                 console.error('Помилка:', error);
