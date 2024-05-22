@@ -73,6 +73,7 @@
         .form-group label {
             color: var(--text-color);
             font-weight: bold;
+            text-shadow: 0 0 5px rgba(0,0,0,0.3);
         }
 
         .form-group input {
@@ -83,42 +84,9 @@
             border-radius: 5px;
         }
 
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 200px;
-            background-color: var(--tooltip-background-color);
-            color: var(--tooltip-text-color);
-            text-align: center;
-            border-radius: 5px;
-            padding: 5px;
-            position: absolute;
-            z-index: 1;
-            bottom: 100%;
-            left: 50%;
-            margin-left: -100px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .tooltip .tooltiptext::after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: var(--tooltip-background-color) transparent transparent transparent;
-        }
-
         button {
             background-color: var(--button-background-color);
-            color: var(--tooltip-text-color-light);
+            color: var(--text-color);
             padding: 10px 15px;
             border: none;
             border-radius: 5px;
@@ -177,31 +145,33 @@
             <div th:if="${param.error}" class="alert alert-danger" role="alert">
                 <p th:text="${param.error}"></p>
             </div>
-            <div class="form-group text-dark">
-                <label for="email">Email:</label>
-                <input type="text" class="form-control bg-secondary text-light border-dark placeholder-fg"
-                       id="email" name="email" required placeholder="email">
+            <div class="form-group">
+                <label for="email">Електронна пошта:</label>
+                <input type="text" class="form-control" id="email" name="email"
+                       required placeholder="user@example.com">
             </div>
-            <div class="form-group text-dark">
+            <div class="form-group">
                 <label for="password">Пароль:</label>
-                <input type="password" class="form-control bg-secondary text-light border-dark placeholder-fg"
-                       id="password" name="password" required placeholder="password">
+                <input type="password" class="form-control" id="password" name="password"
+                       required placeholder="123456789">
             </div>
-            <div class="form-group text-dark">
+            <div class="form-group">
                 <label for="repeatPassword">Повторіть пароль:</label>
-                <input type="password" class="form-control bg-secondary text-light border-dark placeholder-fg"
-                       id="repeatPassword" name="repeatPassword" required placeholder="repeat password">
+                <input type="password" class="form-control" id="repeatPassword" name="repeatPassword"
+                       required placeholder="123456789">
             </div>
-            <div class="form-group text-dark">
-                <label for="otpTelegram">OTP Telegram:</label>
+            <div class="form-group">
+                <label for="otpTelegram"></label>
                 <div class="tooltip-container">
-                    <input type="text" class="form-control bg-secondary text-light border-dark placeholder-fg"
-                           id="otpTelegram" name="otpTelegram" required placeholder="otp telegram">
-                    <div class="tooltiptext">Інструкція: введіть код, який ви отримали від телеграм бота.</div>
+                    <input type="text" class="form-control" id="otpTelegram" name="otpTelegram"
+                           required placeholder="одноразовий код">
+                    <div class="tooltiptext">Інструкція: введіть код, який ви отримали від <a href="https://t.me/AdminBot?start=chat">@telegram_bot</a> телеграм бота.</div>
                 </div>
             </div>
-            <button type="button" onclick="sendFormData()" class="btn btn-primary">Реєстрація</button>
-            <a class="p-3" style="color: #00BFFF" href="/login">Маєте акаунт?</a>
+            <div class="justify-content-between" style="display: flex; align-items: center;">
+                <button type="button" onclick="sendFormData()">Реєстрація</button>
+                <span style="margin-left: 10px;"><a style="color: #00BFFF" th:href="@{/register}">Маєте акаунт?</a></span>
+            </div>
         </form>
     </div>
 </div>
@@ -281,6 +251,7 @@
             document.body.setAttribute("data-theme", theme);
         });
     });
+
 </script>
 </body>
 </html>
