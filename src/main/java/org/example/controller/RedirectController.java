@@ -40,4 +40,8 @@ public class RedirectController {
         return "site/all/register";
     }
 
+    @GetMapping("/pollcabinet")
+    public String redirectToPollCabinet() {
+        return "site/secured/constructor/pollcabinet";
+    }
 }

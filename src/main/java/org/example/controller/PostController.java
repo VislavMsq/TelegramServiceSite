@@ -2,8 +2,10 @@ package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.entity.subscriber.Post;
+import org.example.entity.subscriber.dto.PollRawDto;
 import org.example.entity.subscriber.dto.PostDto;
 import org.example.service.MessageService;
+import org.example.service.PollService;
 import org.example.service.PostService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +22,13 @@ public class PostController {
 
     private final PostService postService;
     private final MessageService messageService;
+    private final PollService pollService;
 
+    @GetMapping("/raw")
+    public List<PollRawDto> getRawPoll() {
+        return pollService.getAllPolls();
+
+    }
     @GetMapping
     public List<PostDto> getPosts(@RequestParam("interval") Integer interval) {
         List<Post> posts = postService.getPostsFromDataSource();

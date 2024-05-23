@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Розгортання інформації з бекенду</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <style>
+        .collapsible {
+            background-color: #f1f1f1;
+            color: #444;
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        .active, .collapsible:hover {
+            background-color: #ddd;
+        }
+
+        .content {
+            padding: 0 18px;
+            display: none;
+            overflow: hidden;
+            background-color: #f9f9f9;
+            margin-top: 5px;
+            max-height: 0;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .content.show {
+            display: block;
+            max-height: 1000px; /* довільне значення, яке повинно бути більшим за фактичну висоту вмісту */
+        }
+
+        .label-button {
+            background-color: #f1f1f1;
+            color: #444;
+            cursor: pointer;
+            padding: 5px 10px;
+            margin: 5px 0; /* Змінено з 5px на 5px 0 */
+            border: none;
+            outline: none;
+            font-size: 16px;
+            border-radius: 5px;
+            display: block; /* Змінено з inline-block на block */
+            width: 100%; /* Щоб кнопки розтягувалися на всю ширину */
+            text-align: left; /* Вирівнювання тексту ліворуч */
+            transition: background-color 0.3s;
+        }
+
+        .label-button:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="navbar">
+        <ul class="navbar-links">
+            <li class="navbar-item">
+                <a href="#home">Головна</a>
+            </li>
+            <li class="navbar-item">
+                <a>Послуги</a>
+                <ul class="dropdown">
+                    <li><a href="#service1">бот-адмін</a></li>
+                    <li><a href="/logs/log/mariya">логи</a></li>
+                    <li><a href="#service2">бот-ідписник</a></li>
+                    <li><a href="#logs">логи</a></li>
+                    <li><a href="/statistics/stats">пости</a></li>
+                    <li><a href="/constructor/poll">опитування</a></li>
+                    <li><a href="#posts/stats">статистика</a></li>
+                </ul>
+            </li>
+            <li class="navbar-item">
+                <a>Про нас</a>
+                <ul class="dropdown">
+                    <li><a href="#team">Команда</a></li>
+                    <li><a href="#mission">Місія</a></li>
+                    <li><a href="#history">Історія</a></li>
+                </ul>
+            </li>
+            <li class="navbar-item">
+                <a href="#contact">Контакти</a>
+                <ul class="dropdown">
+                    <li><a href="#email">Email</a></li>
+                    <li><a href="#phone">Телефон</a></li>
+                    <li><a href="#address">Адреса</a></li>
+                </ul>
+            </li>
+        </ul>
+        <div class="navbar-login">
+            <a href="/login" class="login-button">Вхід</a>
+        </div>
+        <div class="navbar-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </nav>
+</header>
+<h2>Приклади розгортання інформації з бекенду</h2>
+
+<div id="sections-container"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const testData = [
+        {
+            poll: {
+                text: "Доброго вечора, розкажіть як ви вважаєте має бути покарано ворога народу",
+                labels: [
+                    { text: "Посадити" },
+                    { text: "Смертна кара" },
+                    { text: "Виставити в кайданках" }
+                ]
+            }
+        },
+        {
+            poll: {
+                text: "Яка ваша улюблена кольорова палітра?",
+                labels: [
+                    { text: "Червона" },
+                    { text: "Синя" },
+                    { text: "Зелена" }
+                ]
+            }
+        }
+        // Можна додати більше об'єктів testData, які вам потрібні
+    ];
+
+    const container = document.getElementById('sections-container');
+
+    testData.forEach(data => {
+        createSection(data.poll);
+    });
+
+    function createSection(section) {
+        const button = document.createElement('button');
+        button.className = 'collapsible';
+        button.textContent = 'Розділ';
+        container.appendChild(button);
+
+        const content = document.createElement('div');
+        content.className = 'content';
+
+        const paragraph = document.createElement('p');
+        paragraph.textContent = section.text;
+        content.appendChild(paragraph);
+
+        const labelButtonsContainer = document.createElement('div');
+        labelButtonsContainer.className = 'label-buttons-container';
+        section.labels.forEach(label => {
+            const labelButton = document.createElement('button');
+            labelButton.className = 'label-button';
+            labelButton.textContent = label.text;
+            labelButtonsContainer.appendChild(labelButton);
+        });
+        content.appendChild(labelButtonsContainer);
+
+        container.appendChild(content);
+
+        button.addEventListener('click', function () {
+            this.classList.toggle('active');
+            content.classList.toggle('show');
+        });
+
+    }
+});
+fetch('/api/posts/raw', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                if (data) {
+                    const jsonData = JSON.parse(data);
+                    console.log('Отримано відповідь від сервера:', jsonData);
+                } else {
+                    console.log('No data received from server');
+                }
+            })
+</script>
+
+</body>
+</html>

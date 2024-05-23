@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     console.log('No data received from server');
                 }
-                window.location.href = '/';
+                window.location.href = '/pollcabinet';
             })
             .catch(error => {
                 console.error('Помилка:', error);

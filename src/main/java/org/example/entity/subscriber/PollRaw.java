@@ -37,6 +37,7 @@ public class PollRaw {
             fetch = FetchType.LAZY
     )
     private List<ButtonRaw> buttons;
+    // todo зробити привязку до конгретноого вебюзера що б знати за ким закріплена ця заготовка + XML
 
     @Override
     public boolean equals(Object o) {

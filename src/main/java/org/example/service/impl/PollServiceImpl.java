@@ -1,16 +1,20 @@
 package org.example.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.example.entity.subscriber.Admin;
 import org.example.entity.subscriber.ButtonRaw;
 import org.example.entity.subscriber.PollRaw;
+import org.example.entity.subscriber.WebUser;
 import org.example.entity.subscriber.dto.ButtonRawDto;
 import org.example.entity.subscriber.dto.PollDto;
 import org.example.entity.subscriber.dto.PollRawDto;
+import org.example.repository.AdminRepository;
 import org.example.repository.PollRawRepository;
 import org.example.service.PollService;
-import org.springframework.security.core.context.SecurityContext;
+import org.example.service.WebUserService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,7 +26,8 @@ import java.util.stream.Collectors;
 @Service
 public class PollServiceImpl implements PollService {
     private final PollRawRepository pollRawRepository;
-    private static final SecurityContext securityContext = SecurityContextHolder.getContext();
+    private final WebUserService webUserService;
+    private final AdminRepository adminRepository;
 
     @Override
     public void createPoll(PollDto pollDto) {
@@ -44,8 +49,14 @@ public class PollServiceImpl implements PollService {
     }
 
     @Override
+    @Transactional
     public List<PollRawDto> getAllPolls() {
-        securityContext.getAuthentication().getCredentials();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        WebUser webUser = webUserService.findByEmail(email);
+        Admin admin = adminRepository.findFirstByTelegramId(webUser.getTelegramId());
+        // todo ...
+
         List<PollRaw> rawPolls = pollRawRepository.findAll();
 
         return rawPolls.stream()
@@ -66,4 +77,14 @@ public class PollServiceImpl implements PollService {
         pollRawDto.setButtons(buttonRawDtos);
         return pollRawDto;
     }
+    // todo
+    //  метод для отримання дто готових опитування
+    //  які по структурі будуть схожі на дто заготовк але будуть згруповані по Channel.title
+    //  також зробити ендпоінт в контроллері
+
+    // todo
+    //  організувати підрахунок голосів опитувань і передати в кнопки пораховане
+
+    // todo
+    //  мене бусить цей фронт сраних джаваскріпт
 }
