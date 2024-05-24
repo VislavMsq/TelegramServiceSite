@@ -37,7 +37,13 @@ public class PollRaw {
             fetch = FetchType.LAZY
     )
     private List<ButtonRaw> buttons;
-    // todo зробити привязку до конгретноого вебюзера що б знати за ким закріплена ця заготовка + XML
+
+    @ManyToOne(
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(name="web_user_id")
+    private WebUser webUser;
 
     @Override
     public boolean equals(Object o) {

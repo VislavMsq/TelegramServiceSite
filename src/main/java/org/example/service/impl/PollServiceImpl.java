@@ -1,7 +1,6 @@
 package org.example.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.example.entity.subscriber.Admin;
 import org.example.entity.subscriber.ButtonRaw;
 import org.example.entity.subscriber.PollRaw;
 import org.example.entity.subscriber.WebUser;
@@ -30,11 +29,17 @@ public class PollServiceImpl implements PollService {
     private final AdminRepository adminRepository;
 
     @Override
+    @Transactional
     public void createPoll(PollDto pollDto) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        WebUser webUser = webUserService.findByEmail(email);
+
         PollRaw pollRaw = new PollRaw();
         pollRaw.setText(pollDto.getText());
         pollRaw.setCode(UUID.randomUUID());
         pollRaw.setCreatedAt(LocalDateTime.now());
+        pollRaw.setWebUser(webUser);
         pollRawRepository.save(pollRaw);
         List<ButtonRaw> buttons = new ArrayList<>();
 
@@ -45,7 +50,7 @@ public class PollServiceImpl implements PollService {
             buttons.add(buttonRaw);
         }
         pollRaw.setButtons(buttons);
-        pollRawRepository.save(pollRaw);
+//        pollRawRepository.save(pollRaw);
     }
 
     @Override
@@ -54,12 +59,9 @@ public class PollServiceImpl implements PollService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         WebUser webUser = webUserService.findByEmail(email);
-        Admin admin = adminRepository.findFirstByTelegramId(webUser.getTelegramId());
-        // todo ...
+        List<PollRaw> pollRawList = webUser.getPollRawList();
 
-        List<PollRaw> rawPolls = pollRawRepository.findAll();
-
-        return rawPolls.stream()
+        return pollRawList.stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
     }
@@ -74,7 +76,7 @@ public class PollServiceImpl implements PollService {
             buttonRawDto.setText(buttonRaw.getText());
             buttonRawDtos.add(buttonRawDto);
         }
-        pollRawDto.setButtons(buttonRawDtos);
+        pollRawDto.setLabels(buttonRawDtos);
         return pollRawDto;
     }
     // todo

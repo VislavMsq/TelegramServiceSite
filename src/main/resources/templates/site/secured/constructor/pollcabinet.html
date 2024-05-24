@@ -6,57 +6,74 @@
     <title>Розгортання інформації з бекенду</title>
     <link rel="stylesheet" th:href="@{/css/home.css}">
     <style>
-        .collapsible {
-            background-color: #f1f1f1;
-            color: #444;
-            cursor: pointer;
-            padding: 10px;
-            width: 100%;
-            border: none;
-            text-align: left;
-            outline: none;
-            font-size: 18px;
-            margin-top: 10px;
-        }
+        :root {
+    --bg-color: #f1f1f1;
+    --text-color: #444;
+    --hover-bg-color: #ddd;
+    --content-bg-color: #f9f9f9;
+}
 
-        .active, .collapsible:hover {
-            background-color: #ddd;
-        }
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #333;
+        --text-color: #ddd;
+        --hover-bg-color: #555;
+        --content-bg-color: #444;
+    }
+}
 
-        .content {
-            padding: 0 18px;
-            display: none;
-            overflow: hidden;
-            background-color: #f9f9f9;
-            margin-top: 5px;
-            max-height: 0;
-            transition: max-height 0.3s ease-out;
-        }
+.collapsible {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 18px;
+    margin-top: 10px;
+}
 
-        .content.show {
-            display: block;
-            max-height: 1000px; /* довільне значення, яке повинно бути більшим за фактичну висоту вмісту */
-        }
+.active, .collapsible:hover {
+    background-color: var(--hover-bg-color);
+}
 
-        .label-button {
-            background-color: #f1f1f1;
-            color: #444;
-            cursor: pointer;
-            padding: 5px 10px;
-            margin: 5px 0; /* Змінено з 5px на 5px 0 */
-            border: none;
-            outline: none;
-            font-size: 16px;
-            border-radius: 5px;
-            display: block; /* Змінено з inline-block на block */
-            width: 100%; /* Щоб кнопки розтягувалися на всю ширину */
-            text-align: left; /* Вирівнювання тексту ліворуч */
-            transition: background-color 0.3s;
-        }
+.content {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    background-color: var(--content-bg-color);
+    margin-top: 5px;
+    max-height: 0;
+    transition: max-height 0.3s ease-out;
+}
 
-        .label-button:hover {
-            background-color: #ddd;
-        }
+.content.show {
+    display: block;
+    max-height: 1000px; /* an arbitrary value that should be greater than the actual content height */
+}
+
+.label-button {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 5px 10px;
+    margin: 5px 0;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    border-radius: 5px;
+    display: block;
+    width: 100%;
+    text-align: left;
+    transition: background-color 0.3s;
+}
+
+.label-button:hover {
+    background-color: var(--hover-bg-color);
+}
+
     </style>
 </head>
 <body>
@@ -137,9 +154,29 @@
 
     const container = document.getElementById('sections-container');
 
-    testData.forEach(data => {
-        createSection(data.poll);
-    });
+    fetch('/api/posts/raw', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                if (data) {
+                    const jsonData = JSON.parse(data);
+                    console.log('Отримано відповідь від сервера:', jsonData);
+                    jsonData.forEach(data => {
+                        createSection(data);
+                    });
+                } else {
+                    console.log('No data received from server');
+                }
+            })
 
     function createSection(section) {
         const button = document.createElement('button');
@@ -150,7 +187,7 @@
         const content = document.createElement('div');
         content.className = 'content';
 
-        const paragraph = document.createElement('p');
+        const paragraph = document.createElement('h3');
         paragraph.textContent = section.text;
         content.appendChild(paragraph);
 
@@ -170,29 +207,11 @@
             this.classList.toggle('active');
             content.classList.toggle('show');
         });
-
     }
 });
-fetch('/api/posts/raw', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.text();
-            })
-            .then(data => {
-                if (data) {
-                    const jsonData = JSON.parse(data);
-                    console.log('Отримано відповідь від сервера:', jsonData);
-                } else {
-                    console.log('No data received from server');
-                }
-            })
+
+
+
 </script>
 
 </body>

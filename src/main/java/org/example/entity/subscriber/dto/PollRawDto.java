@@ -8,7 +8,7 @@ import java.util.List;
 public class PollRawDto {
     String id;
     String text;
-    List<ButtonRawDto> buttons;
+    List<ButtonRawDto> labels;
 
 
 }
