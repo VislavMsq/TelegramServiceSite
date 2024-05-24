@@ -2,6 +2,7 @@ package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.entity.subscriber.Post;
+import org.example.entity.subscriber.dto.GroupedPollDto;
 import org.example.entity.subscriber.dto.PollRawDto;
 import org.example.entity.subscriber.dto.PostDto;
 import org.example.service.MessageService;
@@ -47,5 +48,10 @@ public class PostController {
 //                })
 //                .collect(Collectors.toList());
 
+    }
+
+    @GetMapping("/grouped")
+    public List<GroupedPollDto> groupPolls() {
+        return pollService.getGroupedPolls();
     }
 }

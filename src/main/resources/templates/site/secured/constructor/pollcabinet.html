@@ -122,35 +122,14 @@
         </div>
     </nav>
 </header>
-<h2>Приклади розгортання інформації з бекенду</h2>
-
+<main>
+<section>
+    <h2>Кабінет зконструйюваних опитувань</h2>
+</section>
 <div id="sections-container"></div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-    const testData = [
-        {
-            poll: {
-                text: "Доброго вечора, розкажіть як ви вважаєте має бути покарано ворога народу",
-                labels: [
-                    { text: "Посадити" },
-                    { text: "Смертна кара" },
-                    { text: "Виставити в кайданках" }
-                ]
-            }
-        },
-        {
-            poll: {
-                text: "Яка ваша улюблена кольорова палітра?",
-                labels: [
-                    { text: "Червона" },
-                    { text: "Синя" },
-                    { text: "Зелена" }
-                ]
-            }
-        }
-        // Можна додати більше об'єктів testData, які вам потрібні
-    ];
 
     const container = document.getElementById('sections-container');
 
@@ -199,6 +178,10 @@
             labelButton.textContent = label.text;
             labelButtonsContainer.appendChild(labelButton);
         });
+        const labelButton = document.createElement('button');
+        labelButton.className = 'label';
+        labelButton.textContent = section.id;
+        labelButtonsContainer.appendChild(labelButton)
         content.appendChild(labelButtonsContainer);
 
         container.appendChild(content);
@@ -213,6 +196,6 @@
 
 
 </script>
-
+</main>
 </body>
 </html>

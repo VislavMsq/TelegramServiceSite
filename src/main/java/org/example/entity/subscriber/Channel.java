@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -58,6 +59,12 @@ public class Channel {
     )
     private Set<Admin> admins;
 
+    @OneToMany(
+            mappedBy = "channel",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            fetch = FetchType.LAZY
+    )
+    private List<Poll> polls;
 
 
     @Transactional

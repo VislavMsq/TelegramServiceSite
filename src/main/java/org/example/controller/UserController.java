@@ -21,8 +21,7 @@ public class UserController {
 
     @Transactional
     @PostMapping("/new")
-    public String register(@RequestBody WebUserDto webUserDto) {
-        System.out.println(webUserDto);
+    public void register(@RequestBody WebUserDto webUserDto) {
         if (!otpRepository.existsByCode(webUserDto.getOtpTelegram())) {
             throw new InvalidOtpException(ErrorMessage.INVALID_OTP);
         } else if (webUserService.existByEmail(webUserDto.getEmail())) {
@@ -31,6 +30,5 @@ public class UserController {
             webUserService.save(webUserDto);
             otpRepository.deleteByCode(webUserDto.getOtpTelegram());
         }
-        return "redirect:/login";
     }
 }

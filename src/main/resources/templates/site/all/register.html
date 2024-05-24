@@ -170,7 +170,7 @@
             </div>
             <div class="justify-content-between" style="display: flex; align-items: center;">
                 <button type="button" onclick="sendFormData()">Реєстрація</button>
-                <span style="margin-left: 10px;"><a style="color: #00BFFF" th:href="@{/register}">Маєте акаунт?</a></span>
+                <span style="margin-left: 10px;"><a style="color: #00BFFF" th:href="@{/login}">Маєте акаунт?</a></span>
             </div>
         </form>
     </div>
@@ -203,6 +203,7 @@
             body: JSON.stringify(formData),
         })
             .then(response => {
+                console.log(response)
                 if (!response.ok) {
                     response.text().then(
                         result => JSON.parse(result).body.detail,
@@ -210,8 +211,10 @@
                         .then((value) => {
                             const list = value.split(":");
                             if ("For input string" === list[0]) {
-                                window.location.href = "/register?error=Невірний код Telegram"
+                                // window.location.href = "/register?error=Невірний код Telegram"
+                                notify()
                             } else {
+                                console.log(list)
                                 window.location.href = "/register?error=" + list[list.length - 1]
                             }
                         });

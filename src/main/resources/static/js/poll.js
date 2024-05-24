@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             body: JSON.stringify({
                 buttons: buttonNames,
-                text: surveyText
+                title: surveyText
             })
         })
             .then(response => {

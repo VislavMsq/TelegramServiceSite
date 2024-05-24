@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class PollDto {
-    private List<ButtonDto> buttons;
-    private String text;
+public class PollPostDto {
+    private List<String> buttons;
+    private String title;
 }

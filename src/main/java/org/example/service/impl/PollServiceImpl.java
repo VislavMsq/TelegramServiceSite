@@ -1,13 +1,10 @@
 package org.example.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.example.entity.subscriber.ButtonRaw;
-import org.example.entity.subscriber.PollRaw;
-import org.example.entity.subscriber.WebUser;
-import org.example.entity.subscriber.dto.ButtonRawDto;
-import org.example.entity.subscriber.dto.PollDto;
-import org.example.entity.subscriber.dto.PollRawDto;
+import org.example.entity.subscriber.*;
+import org.example.entity.subscriber.dto.*;
 import org.example.repository.AdminRepository;
+import org.example.repository.ButtonUserLinkRepository;
 import org.example.repository.PollRawRepository;
 import org.example.service.PollService;
 import org.example.service.WebUserService;
@@ -18,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -27,30 +25,30 @@ public class PollServiceImpl implements PollService {
     private final PollRawRepository pollRawRepository;
     private final WebUserService webUserService;
     private final AdminRepository adminRepository;
+    private final ButtonUserLinkRepository buttonUserLinkRepository;
 
     @Override
     @Transactional
-    public void createPoll(PollDto pollDto) {
+    public void createPoll(PollPostDto pollDto) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         WebUser webUser = webUserService.findByEmail(email);
 
         PollRaw pollRaw = new PollRaw();
-        pollRaw.setText(pollDto.getText());
+        pollRaw.setText(pollDto.getTitle());
         pollRaw.setCode(UUID.randomUUID());
         pollRaw.setCreatedAt(LocalDateTime.now());
         pollRaw.setWebUser(webUser);
         pollRawRepository.save(pollRaw);
         List<ButtonRaw> buttons = new ArrayList<>();
 
-        for (String o : pollDto.getButtons()) {
+        for (String text : pollDto.getButtons()) {
             ButtonRaw buttonRaw = new ButtonRaw();
-            buttonRaw.setText(o);
+            buttonRaw.setText(text);
             buttonRaw.setPollRaw(pollRaw);
             buttons.add(buttonRaw);
         }
         pollRaw.setButtons(buttons);
-//        pollRawRepository.save(pollRaw);
     }
 
     @Override
@@ -66,10 +64,50 @@ public class PollServiceImpl implements PollService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional
+    public List<GroupedPollDto> getGroupedPolls() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        WebUser webUser = webUserService.findByEmail(email);
+        List<Admin> adminList = adminRepository.findAllByTelegramId(webUser.getTelegramId());
+        List<Channel> channelList = adminList.stream()
+                .map(Admin::getChannel)
+                .collect(Collectors.toList());
+
+        List<GroupedPollDto> groupedPollDtoList = new ArrayList<>();
+        for (Channel channel : channelList) {
+            GroupedPollDto groupedPollDto = new GroupedPollDto();
+            groupedPollDto.setTitle(channel.getTitle());
+            groupedPollDto.setPolls(convertToPollDtos(channel));
+            groupedPollDtoList.add(groupedPollDto);
+        }
+        return groupedPollDtoList;
+    }
+
+    @Transactional
+    public List<PollDto> convertToPollDtos(Channel channel) {
+        List<Poll> polls = channel.getPolls();
+
+        List<PollDto> pollDtos = new ArrayList<>();
+        for (Poll poll : polls) {
+            PollDto pollDto = new PollDto();
+
+            pollDto.setText(poll.getText());
+            List<ButtonDto> buttons = new ArrayList<>();
+            for (Button button : poll.getButtons()) {
+                ButtonDto buttonDto = new ButtonDto();
+                buttonDto.setText(button.getText());
+                buttonDto.setVotes((long) buttonUserLinkRepository.findAllByButton(button).size());
+                buttons.add(buttonDto);
+            }
+            pollDto.setButtons(buttons);
+            pollDtos.add(pollDto);
+        }
+        return pollDtos;
+    }
+
     private PollRawDto mapToDto(PollRaw pollRaw) {
         PollRawDto pollRawDto = new PollRawDto();
-        pollRawDto.setId(pollRaw.getCode().toString());
-        pollRawDto.setText(pollRaw.getText());
         List<ButtonRawDto> buttonRawDtos = new ArrayList<>();
         for (ButtonRaw buttonRaw : pollRaw.getButtons()) {
             ButtonRawDto buttonRawDto = new ButtonRawDto();
