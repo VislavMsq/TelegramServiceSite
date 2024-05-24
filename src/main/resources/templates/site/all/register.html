@@ -23,6 +23,12 @@
             --input-border-color-dark: #888;
             --button-background-color: #007bff;
             --button-hover-background-color: #0056b3;
+            --swal-bg-light: #fff;
+            --swal-bg-dark: #333;
+            --swal-text-light: #000;
+            --swal-text-dark: #fff;
+            --swal-border-light: #ccc;
+            --swal-border-dark: #555;
         }
 
         [data-theme="light"] {
@@ -135,6 +141,18 @@
             visibility: visible;
             opacity: 1;
         }
+
+        body[data-theme="light"] .swal2-popup {
+            background-color: var(--swal-bg-light) !important;
+            color: var(--swal-text-light) !important;
+            border: 1px solid var(--swal-border-light) !important;
+        }
+
+        body[data-theme="dark"] .swal2-popup {
+            background-color: var(--swal-bg-dark) !important;
+            color: var(--swal-text-dark) !important;
+            border: 1px solid var(--swal-border-dark) !important;
+        }
     </style>
 </head>
 <body data-theme="light">
@@ -142,9 +160,6 @@
     <div class="login-box">
         <h2>Реєстрація</h2>
         <form id="register-form" action="/user/new" method="post">
-            <div th:if="${param.error}" class="alert alert-danger" role="alert">
-                <p th:text="${param.error}"></p>
-            </div>
             <div class="form-group">
                 <label for="email">Електронна пошта:</label>
                 <input type="text" class="form-control" id="email" name="email"
@@ -165,7 +180,9 @@
                 <div class="tooltip-container">
                     <input type="text" class="form-control" id="otpTelegram" name="otpTelegram"
                            required placeholder="одноразовий код">
-                    <div class="tooltiptext">Інструкція: введіть код, який ви отримали від <a href="https://t.me/AdminBot?start=chat">@telegram_bot</a> телеграм бота.</div>
+                    <div class="tooltiptext">Інструкція: введіть код, який ви отримали від <a
+                            href="https://t.me/AdminBot?start=chat">@telegram_bot</a> телеграм бота.
+                    </div>
                 </div>
             </div>
             <div class="justify-content-between" style="display: flex; align-items: center;">
@@ -178,13 +195,25 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 <script>
     function sendFormData() {
         const password = document.getElementById("password").value;
         const repeatPassword = document.getElementById("repeatPassword").value;
 
         if (password !== repeatPassword) {
-            window.location.href = "/register?error=Паролі відрізняються!"
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: 'Паролі не співпадають!',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                customClass: {
+                    popup: document.body.getAttribute('data-theme') === 'dark' ? 'swal2-dark' : 'swal2-light'
+                }
+            });
             return;
         }
 
@@ -202,26 +231,34 @@
             },
             body: JSON.stringify(formData),
         })
-            .then(response => {
-                console.log(response)
-                if (!response.ok) {
-                    response.text().then(
-                        result => JSON.parse(result).body.detail,
-                        error => error)
-                        .then((value) => {
-                            const list = value.split(":");
-                            if ("For input string" === list[0]) {
-                                // window.location.href = "/register?error=Невірний код Telegram"
-                                notify()
-                            } else {
-                                console.log(list)
-                                window.location.href = "/register?error=" + list[list.length - 1]
-                            }
-                        });
-                } else {
-                    window.location.href = "/login"
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(errorResponse => {
+                    throw new Error(errorResponse.message || 'Unknown error');
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            window.location.href = "/login";
+        })
+        .catch(error => {
+            const errorMessage = error.message;
+
+            // Перевіряємо, чи повідомлення про помилку містить "For input string"
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: errorMessage,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                customClass: {
+                    popup: document.body.getAttribute('data-theme') === 'dark' ? 'swal2-dark' : 'swal2-light'
                 }
             });
+        });
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -238,23 +275,19 @@
             tooltip.style.opacity = '0';
         });
 
-        // Перевірка теми браузера і встановлення відповідної теми
         function setThemeBasedOnPreference() {
             const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
             const theme = prefersDarkScheme ? "dark" : "light";
             document.body.setAttribute("data-theme", theme);
         }
 
-        // Виклик функції для встановлення теми при завантаженні сторінки
         setThemeBasedOnPreference();
 
-        // Додавання слухача для зміни теми в налаштуваннях системи
         window.matchMedia("(prefers-color-scheme: dark)").addListener(e => {
             const theme = e.matches ? "dark" : "light";
             document.body.setAttribute("data-theme", theme);
         });
     });
-
 </script>
 </body>
 </html>

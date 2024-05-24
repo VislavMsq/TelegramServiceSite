@@ -14,5 +14,5 @@ public interface OtpRepository extends JpaRepository<OTP, UUID> {
 
     void removeByCode(Long code);
 
-    void deleteByCode(Long telegramId);
+    void deleteByCode(Long code);
 }

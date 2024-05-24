@@ -1,7 +1,6 @@
 package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.entity.subscriber.dto.PollDto;
 import org.example.entity.subscriber.dto.PollPostDto;
 import org.example.service.PollService;
 import org.springframework.web.bind.annotation.PostMapping;
