@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -36,7 +35,6 @@ public class PollServiceImpl implements PollService {
 
         PollRaw pollRaw = new PollRaw();
         pollRaw.setText(pollDto.getTitle());
-        pollRaw.setCode(UUID.randomUUID());
         pollRaw.setCreatedAt(LocalDateTime.now());
         pollRaw.setWebUser(webUser);
         pollRawRepository.save(pollRaw);
@@ -114,7 +112,9 @@ public class PollServiceImpl implements PollService {
             buttonRawDto.setText(buttonRaw.getText());
             buttonRawDtos.add(buttonRawDto);
         }
+        pollRawDto.setId(pollRaw.getId());
         pollRawDto.setLabels(buttonRawDtos);
+        pollRawDto.setText(pollRaw.getText());
         return pollRawDto;
     }
     // todo

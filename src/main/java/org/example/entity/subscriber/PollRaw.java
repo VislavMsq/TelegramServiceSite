@@ -25,9 +25,6 @@ public class PollRaw {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "code")
-    private UUID code;
-
     @Column(name = "text")
     private String text;
 
@@ -50,21 +47,19 @@ public class PollRaw {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PollRaw pollRaw = (PollRaw) o;
-        return Objects.equals(id, pollRaw.id) && Objects.equals(createdAt, pollRaw.createdAt) && Objects.equals(code, pollRaw.code) && Objects.equals(text, pollRaw.text) && Objects.equals(buttons, pollRaw.buttons);
+        return Objects.equals(id, pollRaw.id) && Objects.equals(createdAt, pollRaw.createdAt) && Objects.equals(text, pollRaw.text);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, createdAt, code, text, buttons);
+        return Objects.hash(id, createdAt, text);
     }
 
     @Override
     public String toString() {
         return "PollRaw{" +
-                "buttons=" + buttons +
-                ", id=" + id +
+                "id=" + id +
                 ", createdAt=" + createdAt +
-                ", code=" + code +
                 ", text='" + text + '\'' +
                 '}';
     }

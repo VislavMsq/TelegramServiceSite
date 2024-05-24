@@ -25,9 +25,6 @@ public class Poll {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "code")
-    private Long code;
-
     @Column(name = "text")
     private String text;
 
@@ -62,7 +59,6 @@ public class Poll {
     public String toString() {
         return "Polls{" +
                 "id=" + id +
-                "code=" + code +
                 ", createdAt=" + createdAt +
                 '}';
     }

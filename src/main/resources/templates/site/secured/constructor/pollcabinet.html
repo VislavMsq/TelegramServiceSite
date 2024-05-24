@@ -51,6 +51,7 @@
 
 .content.show {
     display: block;
+    text-align: left;
     max-height: 1000px; /* an arbitrary value that should be greater than the actual content height */
 }
 
@@ -81,7 +82,7 @@
     <nav class="navbar">
         <ul class="navbar-links">
             <li class="navbar-item">
-                <a href="#home">Головна</a>
+                <a href="/">Головна</a>
             </li>
             <li class="navbar-item">
                 <a>Послуги</a>
@@ -178,10 +179,22 @@
             labelButton.textContent = label.text;
             labelButtonsContainer.appendChild(labelButton);
         });
-        const labelButton = document.createElement('button');
-        labelButton.className = 'label';
-        labelButton.textContent = section.id;
-        labelButtonsContainer.appendChild(labelButton)
+
+        const p = document.createElement("p")
+        p.style.borderTop = "1px dashed #000";
+        const label = document.createElement('button');
+        label.className = 'label-button';
+        label.style.marginTop = '10px';
+        label.textContent = section.id;
+        label.addEventListener('click', function() {
+            navigator.clipboard.writeText(section.id).then(function() {
+                console.log('Copying to clipboard was successful!');
+            }, function(err) {
+                console.error('Could not copy text: ', err);
+            });
+        });
+        p.appendChild(label)
+        labelButtonsContainer.appendChild(p)
         content.appendChild(labelButtonsContainer);
 
         container.appendChild(content);
@@ -192,8 +205,6 @@
         });
     }
 });
-
-
 
 </script>
 </main>

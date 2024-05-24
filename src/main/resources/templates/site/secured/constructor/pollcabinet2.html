@@ -1,0 +1,223 @@
+<!-- /api/posts/grouped эта ссылка нам возвращает обьект, а этот обьект имеет в себе имя канала что должно бить главним розднелом,  -->
+<!-- в нем есть массив опросов которые также должны быть розделом как в pollcabinet.html -->
+<!-- в итоге на странице мождет быть много таких розделов-каналов в которых аналогичным образом должны быть созданы розделы опросы как в pollcabinet.html -->
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Розгортання інформації з бекенду</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <style>
+        :root {
+            --bg-color: #f0f0f0;
+            --text-color: #333;
+            --hover-bg-color: #f7f7f7;
+            --content-bg-color: #ffffff;
+            --font-family: 'Roboto', sans-serif;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #333;
+                --text-color: #f0f0f0;
+                --hover-bg-color: #444;
+                --content-bg-color: #555;
+            }
+        }
+
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+        }
+
+        .collapsible {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 18px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .active, .collapsible:hover {
+            background-color: var(--hover-bg-color);
+        }
+
+        .content {
+            padding: 0 18px;
+            display: none;
+            overflow: hidden;
+            background-color: var(--content-bg-color);
+            margin-top: 5px;
+            max-height: 0;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .content.show {
+            display: block;
+            text-align: left;
+            max-height: 1000px; /* an arbitrary value that should be greater than the actual content height */
+        }
+
+        .label-button {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            cursor: pointer;
+            padding: 5px 10px;
+            margin: 5px 0;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            border-radius: 5px;
+            display: block;
+            width: 100%;
+            text-align: left;
+            transition: background-color 0.3s;
+        }
+
+        .label-button:hover {
+            background-color: var(--hover-bg-color);
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="navbar">
+        <ul class="navbar-links">
+            <li class="navbar-item">
+                <a href="/">Головна</a>
+            </li>
+            <li class="navbar-item">
+                <a>Послуги</a>
+                <ul class="dropdown">
+                    <li><a href="#service1">бот-адмін</a></li>
+                    <li><a href="/logs/log/mariya">логи</a></li>
+                    <li><a href="#service2">бот-ідписник</a></li>
+                    <li><a href="#logs">логи</a></li>
+                    <li><a href="/statistics/stats">пости</a></li>
+                    <li><a href="/constructor/poll">опитування</a></li>
+                    <li><a href="#posts/stats">статистика</a></li>
+                </ul>
+            </li>
+            <li class="navbar-item">
+                <a>Про нас</a>
+                <ul class="dropdown">
+                    <li><a href="#team">Команда</a></li>
+                    <li><a href="#mission">Місія</a></li>
+                    <li><a href="#history">Історія</a></li>
+                </ul>
+            </li>
+            <li class="navbar-item">
+                <a href="#contact">Контакти</a>
+                <ul class="dropdown">
+                    <li><a href="#email">Email</a></li>
+                    <li><a href="#phone">Телефон</a></li>
+                    <li><a href="#address">Адреса</a></li>
+                </ul>
+            </li>
+        </ul>
+        <div class="navbar-login">
+            <a href="/login" class="login-button">Вхід</a>
+        </div>
+        <div class="navbar-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </nav>
+</header>
+<main>
+    <section>
+        <h2>Кабінет зконструйюваних опитувань</h2>
+    </section>
+    <div id="sections-container"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const container = document.getElementById('sections-container');
+
+            fetch('/api/posts/grouped', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Отримано відповідь від сервера:', data);
+                    data.forEach(groupedPoll => {
+                        createChannelSection(groupedPoll);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+
+            function createChannelSection(groupedPoll) {
+                const channelButton = document.createElement('button');
+                channelButton.className = 'collapsible';
+                channelButton.textContent = groupedPoll.title;
+                container.appendChild(channelButton);
+
+                const channelContent = document.createElement('div');
+                channelContent.className = 'content';
+
+                groupedPoll.polls.forEach(poll => {
+                    createPollSection(channelContent, poll);
+                });
+
+                container.appendChild(channelContent);
+
+                channelButton.addEventListener('click', function () {
+                    this.classList.toggle('active');
+                    channelContent.classList.toggle('show');
+                });
+            }
+
+            function createPollSection(parent, poll) {
+                const pollButton = document.createElement('button');
+                pollButton.className = 'collapsible';
+                pollButton.textContent = "Розділ";
+                parent.appendChild(pollButton);
+
+                const pollContent = document.createElement('div');
+                pollContent.className = 'content';
+
+                const pollHeader = document.createElement('h3');
+                pollHeader.textContent = poll.text;
+                pollContent.appendChild(pollHeader);
+
+                const labelButtonsContainer = document.createElement('div');
+                labelButtonsContainer.className = 'label-buttons-container';
+
+                poll.buttons.forEach(button => {
+                    const labelButton = document.createElement('button');
+                    labelButton.className = 'label-button';
+                    labelButton.textContent = `${button.text} (${button.votes})`;
+                    labelButtonsContainer.appendChild(labelButton);
+                });
+
+                pollContent.appendChild(labelButtonsContainer);
+                parent.appendChild(pollContent);
+
+                pollButton.addEventListener('click', function () {
+                    this.classList.toggle('active');
+                    pollContent.classList.toggle('show');
+                });
+            }
+        });
+    </script>
+</main>
+</body>
+</html>

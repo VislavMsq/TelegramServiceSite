@@ -3,13 +3,13 @@ package org.example.entity.subscriber.dto;
 import lombok.Data;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 public class PollRawDto {
-    String id;
-    String text;
-    String channelTitle;
-    List<ButtonRawDto> labels;
+    private UUID id;
+    private String text;
+    private List<ButtonRawDto> labels;
 
 
 }

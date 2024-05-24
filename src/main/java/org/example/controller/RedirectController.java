@@ -44,4 +44,8 @@ public class RedirectController {
     public String redirectToPollCabinet() {
         return "site/secured/constructor/pollcabinet";
     }
+    @GetMapping("/pollcabinet/active")
+    public String redirectToActivePollCabinet() {
+        return "site/secured/constructor/pollcabinet2";
+    }
 }
