@@ -220,7 +220,6 @@
         const formData = {
             email: document.getElementById("email").value,
             password: password,
-            repeatPassword: repeatPassword,
             otpTelegram: document.getElementById("otpTelegram").value
         };
 
@@ -237,13 +236,14 @@
                     throw new Error(errorResponse.message || 'Unknown error');
                 });
             }
-            return response.json();
+            return response;
         })
         .then(data => {
             window.location.href = "/login";
         })
         .catch(error => {
             const errorMessage = error.message;
+            console.log(error);
 
             // Перевіряємо, чи повідомлення про помилку містить "For input string"
             Swal.fire({
